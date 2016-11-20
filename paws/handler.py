@@ -8,7 +8,7 @@ class Handler(object):
     '''
 
     def __call__(self, event, context):
-        self.request = Request(event, context)
+        self.request = request = Request(event, context)
         func = getattr(self, self.event['httpMethod'], self.invalid)
         return func(request, *self.event['pathParameters'])
 
