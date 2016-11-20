@@ -9,6 +9,10 @@ class Request(object):
         self.context = context
 
     @property
+    def method(self):
+        return self.event['httpMethod']
+
+    @property
     def query(self):
         return self.event['queryStringParameters']
 
