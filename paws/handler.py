@@ -1,19 +1,33 @@
-from .request import Request
-from .response import response, Response
-
 import logging
+
+from .request import Request
+from .response import Response, response
+
 log = logging.getLogger()
 
 
 class Handler(object):
     '''
     Simple dispatcher class.
+    # WARNING # This code assumes SINGLE THREADED
+
+    Usage:
+
+    class MyHandler(Handler):
+        def get(self, request, *args):
+            ...
+            return Response(...)
+
+    my_handler = MyHandler()
     '''
-    def __init__(self, event, context):
-        self.request = Request(event, context)
+    http_method_names = {'get', 'post', 'put', 'patch', 'delete', 'head', 'options', 'trace'}
 
     def __call__(self, event, context):
-        func = getattr(self, self.event['httpMethod'].lower(), self.invalid)
+        self.request = Request(event, context)
+        if self.request.method.lower() in self.http_method_names:
+            func = getattr(self, self.event['httpMethod'].lower(), self.invalid)
+        else:
+            func = self.invalid
         try:
             resp = func(self.request, *self.event['pathParameters'])
         except Exception:
@@ -34,4 +48,12 @@ class Handler(object):
 
     def invalid(self, *args):
         # XXX Build list of valid methods?
-        return response(status=405)
+        valid_methods = {
+            method
+            for method in self.http_method_names
+            if hasattr(self, method)
+        }
+        return response(
+            status=405,
+            headers={'Allow': ', '.join(valid_methods)},
+        )
