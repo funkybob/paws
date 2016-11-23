@@ -32,3 +32,9 @@ class Response(object):
 
     def render(self):
         return response(self.body, self.status, self.headers)
+
+
+def redirect(location, headers=None):
+    headers = headers or {}
+    headers.setdefault('Location', location)
+    return response(statusCode=303, headers=headers)
