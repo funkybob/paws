@@ -18,7 +18,7 @@ class Request(object):
         return self.event['queryStringParameters']
 
     @cached_property
-    def post(self):
+    def form(self):
         return MultiDict(parse_qs(self.event.get('body', '') or ''))
 
     @cached_property
