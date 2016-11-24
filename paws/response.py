@@ -34,7 +34,12 @@ class Response(object):
         return response(self.body, self.status, self.headers)
 
 
-class RedirectResponse(Response):
+class NotFound(Response):
+    def __init__(self, body='', status=404, headers=None):
+        super(NotFound, self).__init__(body=body, status=status, headers=headers)
+
+
+class Redirect(Response):
     def __init__(self, location, body='', status=303, headers=None):
-        super(RedirectResponse, self).__init__(body=body, status=status, headers=headers)
+        super(Redirect, self).__init__(body=body, status=status, headers=headers)
         self.headers.setdefault('Location', location)
