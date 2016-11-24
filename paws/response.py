@@ -34,7 +34,7 @@ class Response(object):
         return response(self.body, self.status, self.headers)
 
 
-def redirect(location, headers=None):
-    headers = headers or {}
-    headers.setdefault('Location', location)
-    return response(statusCode=303, headers=headers)
+class RedirectResponse(Response):
+    def __init__(self, location, body='', status=303, headers=None):
+        super(RedirectResponse, self).__init__(body=body, status=status, headers=headers)
+        self.headers.setdefault('Location', location)
