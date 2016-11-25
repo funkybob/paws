@@ -1,4 +1,5 @@
 import json
+from Cookie import SimpleCookie
 
 
 def response(body='', status=200, headers=None):
@@ -29,10 +30,12 @@ class Response(object):
         self.body = body
         self.status = status
         self.headers = headers or {}  # Smart Headers container?
+        self.cookies = SimpleCookie()
 
     def render(self):
+        if self.cookies:
+            self.headers['Set-Cookies'] = self.cookies.output(header='', sep=', ').strip()
         return response(self.body, self.status, self.headers)
-
 
 
 class Unauthorized(Response):
