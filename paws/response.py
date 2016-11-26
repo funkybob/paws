@@ -38,6 +38,29 @@ class Response(object):
         return response(self.body, self.status, self.headers)
 
 
+class Redirect(Response):
+    def __init__(self, location, body='', status=303, headers=None):
+        super(Redirect, self).__init__(body=body, status=status, headers=headers)
+        self.headers.setdefault('Location', location)
+
+
+class TemporaryRedirect(Response):
+    def __init__(self, location, body='', status=307, headers=None):
+        super(Redirect, self).__init__(body=body, status=status, headers=headers)
+        self.headers.setdefault('Location', location)
+
+
+class PermanentRedirect(Response):
+    def __init__(self, location, body='', status=308, headers=None):
+        super(Redirect, self).__init__(body=body, status=status, headers=headers)
+        self.headers.setdefault('Location', location)
+
+
+class BadRequest(Response):
+    def __init__(self, body='', status=400, headers=None):
+        super(Unauthorized, self).__init__(body=body, status=status, headers=headers)
+
+
 class Unauthorized(Response):
     def __init__(self, body='', status=401, headers=None):
         super(Unauthorized, self).__init__(body=body, status=status, headers=headers)
@@ -46,9 +69,3 @@ class Unauthorized(Response):
 class NotFound(Response):
     def __init__(self, body='', status=404, headers=None):
         super(NotFound, self).__init__(body=body, status=status, headers=headers)
-
-
-class Redirect(Response):
-    def __init__(self, location, body='', status=303, headers=None):
-        super(Redirect, self).__init__(body=body, status=status, headers=headers)
-        self.headers.setdefault('Location', location)
