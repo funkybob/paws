@@ -1,3 +1,6 @@
+from collections import MutableMapping
+
+
 class MultiDict(dict):
 
     def __getitem__(self, key):
@@ -32,7 +35,7 @@ class cached_property(object):
         return value
 
 
-class HeaderDict(object):
+class HeaderDict(MutableMapping):
     '''
     Case-insensitive dict that returns keys in TitleCase.
     '''
