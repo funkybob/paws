@@ -17,31 +17,33 @@ def Session(dict):
         self.clean = False
 
 
-def factory(SECRET, cookie_name='session'):
+class jwt_session(object):
     '''
-    Decorator factory:
+    Decorator to add JWT Session support to requests.
 
-    Pass secret for signing JWT, and optionally cookie name.
-
-    Returns a handler decorator for loading/saving session.
+    You _MUST_ set the secret!
     '''
+    cookie_name = 'session'
+    secret = None
+    algorithm = 'HS512'
 
-    class with_session(object):
-        def __init__(self, func):
-            self.func = func
+    def __init__(self, func):
+        self.func = func
 
-        def __call__(self, request, *args, **kwargs):
-            if cookie_name in request.cookies:
-                try:
-                    request.session = Session(jwt.decode(request.cookies[cookie_name].value, SECRET))
-                except:
-                    pass
-            else:
-                request.session = Session()
+    def __call__(self, request, *args, **kwargs):
+        if self.cookie_name in request.cookies:
+            try:
+                value = request.cookies[self.cookie_name].value
+                data = jwt.decode(value, self.secret)
+                request.session = Session(data)
+            except:
+                pass
+        else:
+            request.session = Session()
 
-            resp = self.func(request, *args, **kwargs)
-            if not request.session.clean:
-                resp.cookies[cookie_name] = jwt.encode(request.session, SECRET, algorith='')
-            return resp
-
-    return with_session
+        resp = self.func(request, *args, **kwargs)
+        if not request.session.clean:
+            data = dict(request.session)
+            value = jwt.encode(request.session, self.secret, algorith=self.algorithm)
+            resp.cookies[self.cookie_name] = value
+        return resp
