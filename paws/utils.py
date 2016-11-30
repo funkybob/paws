@@ -39,8 +39,10 @@ class HeaderDict(MutableMapping):
     '''
     Case-insensitive dict that returns keys in TitleCase.
     '''
-    def __init__(self, *args, **kwargs):
+    def __init__(self, initial=None):
         self._data = {}
+        if initial:
+            self.update(initial)
 
     def __getitem__(self, key):
         return self._data[key.lower()]
