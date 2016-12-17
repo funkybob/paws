@@ -13,6 +13,10 @@ class Request(object):
         self.context = context
         self.content_type, self.content_data = parse_header(event['headers'].get('content-type', ''))
 
+    @property
+    def body(self):
+        return self.event['body']
+
     @cached_property
     def cookies(self):
         jar = SimpleCookie()
@@ -22,11 +26,10 @@ class Request(object):
 
     @cached_property
     def form(self):
-        body = self.event.get('body', '') or ''
         if self.content_type == 'application/x-www-form-urlencoded':
-            return MultiDict(parse_qs(body))
+            return MultiDict(parse_qs(self.body))
         if self.content_type == 'multipart/form-data':
-            return parse_multipart(BytesIO(body), self.content_data)
+            return parse_multipart(BytesIO(self.body), self.content_data)
 
     @property
     def headers(self):
