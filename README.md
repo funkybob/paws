@@ -14,3 +14,9 @@ from paws import response
 def index(request):
     return response.Response('Hello, world!', headers={'Content-Type': 'text/plain'})
 ```
+
+## Setup
+
+When using this framework, there is one assumption made:
+
+- In your API Gateway you have set "multipart/form-data" as a Binary mode content type.
