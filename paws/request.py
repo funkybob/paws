@@ -27,9 +27,10 @@ class Request(object):
     @cached_property
     def form(self):
         if self.content_type == 'application/x-www-form-urlencoded':
-            return MultiDict(parse_qs(self.body))
+            data = parse_qs(self.body)
         if self.content_type == 'multipart/form-data':
-            return parse_multipart(BytesIO(self.body.decode('base64')), self.content_data)
+            data = parse_multipart(BytesIO(self.body.decode('base64')), self.content_data)
+        return MultiDict(data)
 
     @property
     def headers(self):
