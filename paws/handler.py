@@ -10,6 +10,9 @@ class http_handler(object):
     def __init__(self, func):
         self.func = func
 
+    def __str__(self):
+        return 'HTTP %s -> %s' % (self.request.method, self.func.__name__)
+
     def __call__(self, event, context):
         request = Request(event, context)
         kwargs = event.get('pathParameters', {})
