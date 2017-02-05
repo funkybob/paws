@@ -2,7 +2,7 @@ import json
 from Cookie import SimpleCookie
 
 
-def response(body='', status=200, headers=None):
+def response(body='', status=200, headers=None, binary=False):
     '''
     Generate a response dict for Lambda Proxy
     '''
@@ -13,10 +13,13 @@ def response(body='', status=200, headers=None):
     elif not isinstance(body, str):
         body = json.dumps(body, default=str)
         headers.setdefault('Content-Type', 'application/json')
+    if binary:
+        body = body.encode('base64')
     return {
         'statusCode': status,
         'headers': headers,
         'body': body,
+        'isBase64Encoded': binary,
     }
 
 
