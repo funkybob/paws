@@ -27,7 +27,7 @@ class Response(object):
     '''
     Light container to help building up a response.
     '''
-    __slots__ = ('body', 'status', 'headers',)
+    __slots__ = ('body', 'status', 'headers', 'cookies')
 
     def __init__(self, body='', status=200, headers=None):
         self.body = body
