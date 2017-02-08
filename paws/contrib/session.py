@@ -1,4 +1,3 @@
-import jwt
 
 
 def Session(dict):
@@ -31,6 +30,7 @@ class jwt_session(object):
         self.func = func
 
     def __call__(self, request, *args, **kwargs):
+        import jwt
         if self.cookie_name in request.cookies:
             try:
                 value = request.cookies[self.cookie_name].value
