@@ -50,7 +50,7 @@ class Request(object):
 
     @property
     def stage(self):
-        return self.event['stage']
+        return self.event['requestContext']['stage']
 
     @property
     def stageVar(self):
