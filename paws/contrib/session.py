@@ -1,6 +1,6 @@
 
 
-def Session(dict):
+class Session(dict):
     '''
     Dict which tracks dirty status.
     '''
