@@ -42,11 +42,11 @@ class Request(object):
 
     @property
     def params(self):
-        return self.event['pathParameters']
+        return self.event['pathParameters'] or {}
 
     @property
     def query(self):
-        return self.event['queryStringParameters']
+        return self.event['queryStringParameters'] or {}
 
     @property
     def stage(self):
