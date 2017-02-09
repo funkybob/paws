@@ -39,8 +39,8 @@ class Response(object):
 
     def render(self):
         if self.cookies:
-            self.headers['Set-Cookies'] = self.cookies.output(header='', sep=', ').strip()
-        return response(self.body, self.status, self.headers)
+            self.headers['Set-Cookie'] = self.cookies.output(header='', sep=', ').strip()
+        return response(self.body, self.status, dict(self.headers))
 
 
 class Redirect(Response):
