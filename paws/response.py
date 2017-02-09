@@ -51,19 +51,19 @@ class Redirect(Response):
 
 class TemporaryRedirect(Response):
     def __init__(self, location, body='', status=307, headers=None):
-        super(Redirect, self).__init__(body=body, status=status, headers=headers)
+        super(TemporaryRedirect, self).__init__(body=body, status=status, headers=headers)
         self.headers.setdefault('Location', location)
 
 
 class PermanentRedirect(Response):
     def __init__(self, location, body='', status=308, headers=None):
-        super(Redirect, self).__init__(body=body, status=status, headers=headers)
+        super(PermanentRedirect, self).__init__(body=body, status=status, headers=headers)
         self.headers.setdefault('Location', location)
 
 
 class BadRequest(Response):
     def __init__(self, body='', status=400, headers=None):
-        super(Unauthorized, self).__init__(body=body, status=status, headers=headers)
+        super(BadRequest, self).__init__(body=body, status=status, headers=headers)
 
 
 class Unauthorized(Response):
