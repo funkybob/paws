@@ -1,6 +1,8 @@
 import json
 from Cookie import SimpleCookie
 
+from .utils import HeaderDict
+
 
 def response(body='', status=200, headers=None, binary=False):
     '''
@@ -32,7 +34,7 @@ class Response(object):
     def __init__(self, body='', status=200, headers=None):
         self.body = body
         self.status = status
-        self.headers = headers or {}  # Smart Headers container?
+        self.headers = HeaderDict(headers or {})
         self.cookies = SimpleCookie()
 
     def render(self):
