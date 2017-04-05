@@ -7,8 +7,9 @@ class env(object):
         self.default = default
 
     def __get__(self, obj, cls=None):
-        if cls:
-            return os.environ.get(self.name.upper(), self.default)
+        if not obj:
+            return self
+        return os.environ.get(self.name.upper(), self.default)
 
 
 class MetaConfig(type):
@@ -16,7 +17,7 @@ class MetaConfig(type):
     def __new__(mcs, name, bases, attrs):
         for name, attr in attrs.items():
             if isinstance(attr, env):
-                env.name = name
+                attr.name = name
         return super(MetaConfig, mcs).__new__(mcs, name, bases, attrs)
 
 
