@@ -2,6 +2,10 @@ import os
 
 
 class env(object):
+    '''
+    Allowss secifying a default value which can still be overidden by an env
+    var.
+    '''
     def __init__(self, default=None):
         self.name = None
         self.default = default
@@ -21,7 +25,7 @@ class MetaConfig(type):
         return super(MetaConfig, mcs).__new__(mcs, name, bases, attrs)
 
 
-class Conf(dict):
+class Conf(object):
     '''
     Handy wrapper and placeholder of config values.
     '''
