@@ -11,6 +11,7 @@ class http_handler(object):
         self.func = func
         self.url = None
         self.__name__ = func.__name__
+        self.__module__ = func.__module__
 
     def __str__(self):
         return 'HTTP %s' % (self.func.__name__,)
