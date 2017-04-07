@@ -3,7 +3,7 @@ import os
 
 class env(object):
     '''
-    Allowss secifying a default value which can still be overidden by an env
+    Allows secifying a default value which can still be overidden by an env
     var.
     '''
     def __init__(self, default=None):
