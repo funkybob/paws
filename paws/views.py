@@ -9,11 +9,10 @@ log = logging.getLogger()
 class View:
 
     def __call__(self, event, context):
-        request = Request(event, context)
-        resp = self.prepare(request)
-        if resp:
-            return resp
         kwargs = event.get('pathParameters') or {}
+        self.dispatch(request, **kwargs)
+
+    def dispatch(self, request, **kwargs):
         func = getattr(self, request.method.lower())
         try:
             resp = func(request, **kwargs)
