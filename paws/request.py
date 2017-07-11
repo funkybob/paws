@@ -1,13 +1,14 @@
+from base64 import b64decode
 from cgi import parse_header
-from Cookie import SimpleCookie
+from http.cookies import SimpleCookie
 from io import BytesIO
-from urlparse import parse_qs, urlunsplit
+from urllib.parse import parse_qs, urlunsplit
 
-from multipart import parse_multipart
-from utils import HeaderDict, MultiDict, cached_property
+from .multipart import parse_multipart
+from .utils import HeaderDict, MultiDict, cached_property
 
 
-class Request(object):
+class Request:
     def __init__(self, event, context):
         self.event = event
         self.context = context
@@ -15,7 +16,7 @@ class Request(object):
 
     @property
     def body(self):
-        return self.event.get('body') or ''
+        return self.event.get('body') or b''
 
     @cached_property
     def cookies(self):
@@ -29,7 +30,7 @@ class Request(object):
         if self.content_type == 'application/x-www-form-urlencoded':
             data = parse_qs(self.body)
         if self.content_type == 'multipart/form-data':
-            data = parse_multipart(BytesIO(self.body.decode('base64')), self.content_data)
+            data = parse_multipart(BytesIO(b64decode(self.body)), self.content_data)
         return MultiDict(data)
 
     @property

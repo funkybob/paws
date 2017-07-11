@@ -6,7 +6,7 @@ from .response import Response, response
 log = logging.getLogger()
 
 
-class http_handler(object):
+class http_handler:
     def __init__(self, func):
         self.func = func
         self.url = None
@@ -31,9 +31,9 @@ class http_handler(object):
         return resp
 
 
-class url(object):
+class url:
     '''
-    @url(path[, cores=False][, method='GET'])
+    @url(path[, cors=False][, method='GET'])
     def http_function(request, ...):
 
     http_function.url.path == path

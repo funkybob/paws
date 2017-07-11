@@ -4,11 +4,11 @@ from collections import MutableMapping
 class MultiDict(dict):
 
     def __getitem__(self, key):
-        return super(MultiDict, self).__getitem__(key)[0]
+        return super().__getitem__(key)[0]
 
     def getlist(self, key, default=None):
         try:
-            return super(MultiDict, self).__getitem__(key)
+            return super().__getitem__(key)
         except KeyError:
             if default is None:
                 default = []
@@ -17,14 +17,14 @@ class MultiDict(dict):
     def items(self):
         return [
             (k, v[0])
-            for k, v in super(MultiDict, self).items()
+            for k, v in super().items()
         ]
 
     def lists(self):
-        return super(MultiDict, self).items()
+        return super().items()
 
 
-class cached_property(object):
+class cached_property:
     def __init__(self, func):
         self.func = func
 

@@ -1,9 +1,9 @@
 import os
 
 
-class env(object):
+class env:
     '''
-    Allows secifying a default value which can still be overidden by an env
+    Allows specifying a default value which can still be overidden by an env
     var.
     '''
     def __init__(self, default=None):
@@ -22,14 +22,17 @@ class MetaConfig(type):
         for name, attr in attrs.items():
             if isinstance(attr, env):
                 attr.name = name
-        return super(MetaConfig, mcs).__new__(mcs, name, bases, attrs)
+        return super().__new__(mcs, name, bases, attrs)
+
+    def __getattr__(cls, key):
+        return os.environ[key]
 
 
-class Conf(object):
+class Conf(metaclass=MetaConfig):
     '''
     Handy wrapper and placeholder of config values.
     '''
-    __metaclass__ = MetaConfig
-
-    def __getattr__(self, key):
-        return os.environ[key]
+    def __init__(self):
+        raise RuntimeError(
+            'Can not create instance of singleton {}. Use class directly.'.format(self.__class__.__name__)
+        )

@@ -1,14 +1,12 @@
 import re
 
-from cgi import parse_header
-from collections import defaultdict
-from mimetools import Message
+from cgi import parse_header, valid_boundary
 from io import BytesIO
 
 BOUNDARY_RE = re.compile("^[ -~]{0,200}[!-~]$")
 
 
-class File(object):
+class File:
     '''
     Light weight convenience wrapper for Files in POST data.
     '''
@@ -35,22 +33,26 @@ def parse_multipart(fp, pdict):
     header.
 
     """
-    boundary = pdict.get('boundary', '')
-    if not BOUNDARY_RE.match(boundary):
+    import http.client
+
+    boundary = b""
+    if 'boundary' in pdict:
+        boundary = pdict['boundary']
+    if not valid_boundary(boundary):
         raise ValueError('Invalid boundary in multipart form: %r' % (boundary,))
 
-    nextpart = "--" + boundary
-    lastpart = "--" + boundary + "--"
-    partdict = defaultdict(list)
-    terminator = ""
+    nextpart = b"--" + boundary
+    lastpart = b"--" + boundary + b"--"
+    partdict = {}
+    terminator = b""
 
     while terminator != lastpart:
         bytes = -1
         data = None
         if terminator:
             # At start of next part.  Read headers first.
-            headers = Message(fp)
-            clength = headers.getheader('content-length')
+            headers = http.client.parse_headers(fp)
+            clength = headers.get('content-length')
             if clength:
                 try:
                     bytes = int(clength)
@@ -59,7 +61,7 @@ def parse_multipart(fp, pdict):
             if bytes > 0:
                 data = fp.read(bytes)
             else:
-                data = ""
+                data = b""
         # Read lines until end of part.
         lines = []
         while 1:
@@ -67,8 +69,8 @@ def parse_multipart(fp, pdict):
             if not line:
                 terminator = lastpart  # End outer loop
                 break
-            if line[:2] == "--":
-                terminator = line.strip()
+            if line.startswith(b"--"):
+                terminator = line.rstrip()
                 if terminator in (nextpart, lastpart):
                     break
             lines.append(line)
@@ -79,12 +81,12 @@ def parse_multipart(fp, pdict):
             if lines:
                 # Strip final line terminator
                 line = lines[-1]
-                if line[-2:] == "\r\n":
+                if line[-2:] == b"\r\n":
                     line = line[:-2]
-                elif line[-1:] == "\n":
+                elif line[-1:] == b"\n":
                     line = line[:-1]
                 lines[-1] = line
-                data = "".join(lines)
+                data = b"".join(lines)
         line = headers['content-disposition']
         if not line:
             continue
@@ -97,6 +99,9 @@ def parse_multipart(fp, pdict):
             continue
         if 'filename' in params:
             data = File(data, params['filename'])
-        partdict[name].append(data)
+        if name in partdict:
+            partdict[name].append(data)
+        else:
+            partdict[name] = [data]
 
-    return dict(partdict)
+    return partdict

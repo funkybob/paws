@@ -5,11 +5,11 @@ class Session(dict):
     Dict which tracks dirty status.
     '''
     def __init__(self, *args, **kwargs):
-        super(Session, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.clean = True
 
     def __setitem__(self, *args, **kwargs):
-        super(Session, self).__setitem__(*args, **kwargs)
+        super().__setitem__(*args, **kwargs)
         self.clean = False
 
     def mark_dirty(self):

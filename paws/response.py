@@ -1,5 +1,6 @@
 import json
-from Cookie import SimpleCookie
+from base64 import b64encode
+from http.cookies import SimpleCookie
 
 from .utils import HeaderDict
 
@@ -10,13 +11,11 @@ def response(body='', status=200, headers=None, binary=False):
     '''
     if headers is None:
         headers = {}
-    if isinstance(body, unicode):
-        body = body.encode('utf-8')
-    elif not isinstance(body, str):
+    if not isinstance(body, (str, bytes)):
         body = json.dumps(body, default=str)
         headers.setdefault('Content-Type', 'application/json')
     if binary:
-        body = body.encode('base64')
+        body = b64encode(body)
     return {
         'statusCode': status,
         'headers': headers,
@@ -25,7 +24,7 @@ def response(body='', status=200, headers=None, binary=False):
     }
 
 
-class Response(object):
+class Response:
     '''
     Light container to help building up a response.
     '''
@@ -45,32 +44,32 @@ class Response(object):
 
 class Redirect(Response):
     def __init__(self, location, body='', status=303, headers=None):
-        super(Redirect, self).__init__(body=body, status=status, headers=headers)
+        super().__init__(body=body, status=status, headers=headers)
         self.headers.setdefault('Location', location)
 
 
 class TemporaryRedirect(Response):
     def __init__(self, location, body='', status=307, headers=None):
-        super(TemporaryRedirect, self).__init__(body=body, status=status, headers=headers)
+        super().__init__(body=body, status=status, headers=headers)
         self.headers.setdefault('Location', location)
 
 
 class PermanentRedirect(Response):
     def __init__(self, location, body='', status=308, headers=None):
-        super(PermanentRedirect, self).__init__(body=body, status=status, headers=headers)
+        super().__init__(body=body, status=status, headers=headers)
         self.headers.setdefault('Location', location)
 
 
 class BadRequest(Response):
     def __init__(self, body='', status=400, headers=None):
-        super(BadRequest, self).__init__(body=body, status=status, headers=headers)
+        super().__init__(body=body, status=status, headers=headers)
 
 
 class Unauthorized(Response):
     def __init__(self, body='', status=401, headers=None):
-        super(Unauthorized, self).__init__(body=body, status=status, headers=headers)
+        super().__init__(body=body, status=status, headers=headers)
 
 
 class NotFound(Response):
     def __init__(self, body='', status=404, headers=None):
-        super(NotFound, self).__init__(body=body, status=status, headers=headers)
+        super().__init__(body=body, status=status, headers=headers)
