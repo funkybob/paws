@@ -11,8 +11,6 @@ class env:
         self.default = default
 
     def __get__(self, obj, cls=None):
-        if not obj:
-            return self
         return os.environ.get(self.name.upper(), self.default)
 
 
