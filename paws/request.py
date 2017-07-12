@@ -16,7 +16,7 @@ class Request:
 
     @property
     def body(self):
-        return self.event.get('body') or b''
+        return self.event.get('body') or ''
 
     @cached_property
     def cookies(self):
