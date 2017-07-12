@@ -11,11 +11,11 @@ def response(body='', status=200, headers=None, binary=False):
     '''
     if headers is None:
         headers = {}
-    if not isinstance(body, (str, bytes)):
-        body = json.dumps(body, default=str)
-        headers.setdefault('Content-Type', 'application/json')
     if binary:
         body = b64encode(body)
+    elif not isinstance(body, (str, bytes)):
+        body = json.dumps(body, default=str)
+        headers.setdefault('Content-Type', 'application/json')
     return {
         'statusCode': status,
         'headers': headers,
