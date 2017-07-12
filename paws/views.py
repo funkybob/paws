@@ -9,6 +9,7 @@ log = logging.getLogger()
 class View:
 
     def __call__(self, event, context):
+        request = Request(event, context)
         kwargs = event.get('pathParameters') or {}
         self.dispatch(request, **kwargs)
 
