@@ -9,7 +9,7 @@ class MockRequest:
     def __init__(self, method, url, *, cookies=None, headers=None, body=None):
         self.method = method.upper()
         self.cookies = SimpleCookie()
-        self.body = body if body is not None else b''
+        self.body = body if body is not None else ''
         self.headers = HeaderDict()
         if headers is not None:
             self.headers.update(headers)
