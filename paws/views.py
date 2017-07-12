@@ -11,7 +11,7 @@ class View:
     def __call__(self, event, context):
         request = Request(event, context)
         kwargs = event.get('pathParameters') or {}
-        self.dispatch(request, **kwargs)
+        return self.dispatch(request, **kwargs)
 
     def dispatch(self, request, **kwargs):
         func = getattr(self, request.method.lower())
@@ -19,9 +19,8 @@ class View:
             resp = func(request, **kwargs)
         except:
             import traceback
-            log.error(self)
             log.error(traceback.format_exc())
-            return response(body='Internal server Error', status=500)
+            return response('Internal server Error', status=500)
         if isinstance(resp, Response):
             resp = resp.render()
         return resp
