@@ -8,5 +8,5 @@ setup(
     author='Curtis Maloney',
     author_email='curtis@tinbrain.net',
     url='https://github.com/funkybob/paws',
-    packages=['paws', 'paws.contrib'],
+    packages=['paws', 'paws.contrib', 'paws.views'],
 )
