@@ -1,6 +1,6 @@
 
-from .request import Request
-from .response import Response, response
+from ..request import Request
+from ..response import Response, response
 
 import logging
 log = logging.getLogger()
