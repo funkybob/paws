@@ -24,6 +24,3 @@ class View:
         if isinstance(resp, Response):
             resp = resp.render()
         return resp
-
-    def prepare(self, request):
-        pass
