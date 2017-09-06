@@ -6,13 +6,16 @@ Python helpers for using AWS API Gateway / Lambda "serverless"
 ## Example
 
 ```
-from paws import http_handler
-from paws import response
+from paws import views
 
 
-@http_hander
-def index(request):
-    return response.Response('Hello, world!', headers={'Content-Type': 'text/plain'})
+class IndexView(views.View):
+
+    def get(request):
+        return response.Response('Hello, world!', headers={'Content-Type': 'text/plain'})
+
+index = IndexView()
+
 ```
 
 ## Setup
