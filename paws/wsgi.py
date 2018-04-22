@@ -21,7 +21,7 @@ class WsgiRequest:
     def path(self):
         return self.environ.get('PATH_INFO', b'/')
 
-    @property
+    @cached_property
     def body(self):
         try:
             content_length = int(self.environ.get('CONTENT_LENGTH'))
