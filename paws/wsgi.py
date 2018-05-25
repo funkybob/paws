@@ -2,6 +2,7 @@
 # Mock request cycle for WSGI publishing
 #
 import re
+from base64 import b64decode
 from cgi import parse_header
 from http.cookies import SimpleCookie
 from io import BytesIO
@@ -88,8 +89,9 @@ class Route:
         self.view = view
 
     def matches(self, request):
-        if self.pattern.match(request.path):
-            return True
+        m = self.pattern.match(request.path)
+        if m:
+            return m.groupdict()
 
 
 class Application:
@@ -100,13 +102,19 @@ class Application:
         request = WsgiRequest(environ)
         # map to view
         for route in self.routes:
-            if route.matches(request):
-                resp = route.view.dispatch(request)
+            kwargs = route.matches(request)
+            if kwargs is not None:
+                resp = route.view.dispatch(request, **kwargs)
                 break
         else:
             resp = response(status=404)
 
         # XXX Deal with cookies
         callback(str(resp['statusCode']), list(resp['headers'].items()))
-        yield resp['body'].encode('utf-8')
+        body = resp['body']
+        if resp.get('isBase64Encoded', False):
+            body = b64decode(body)
+        else:
+            body = body.encode('utf-8')
+        yield body
 
