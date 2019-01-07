@@ -1,12 +1,12 @@
 import unittest
 
-from paws.conf import Conf, env
+from paws.conf import Config, env
 
 
 class ConfTest(unittest.TestCase):
 
-    def test_attr_name(self):
+    def test_attr(self):
         class Config(Conf):
-            FOO = env('FOO')
+            FOO : int = 0
 
-        self.assertEqual(Config.FOO.name, 'FOO')
+        self.assertEqual(Config.FOO, 0)
