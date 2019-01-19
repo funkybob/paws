@@ -19,7 +19,7 @@ class View:
             resp = func(request, **kwargs)
         except:
             import traceback
-            log.error(traceback.format_exc())
+            log.exception('Error handling request %s %r', request.method, request)
             return response('Internal server Error', status=500)
         if isinstance(resp, Response):
             resp = resp.render()
